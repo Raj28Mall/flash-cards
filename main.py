@@ -32,7 +32,7 @@ def correct_guess():
     global word
     language_data.remove(word)
     data=pd.DataFrame(language_data)
-    data.to_csv('./data/words_to_learn.csv')
+    data.to_csv('./data/words_to_learn.csv', index=False)
     next_card()
 
 # ----------------------------UI---------------------------- #
