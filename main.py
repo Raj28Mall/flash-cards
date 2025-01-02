@@ -4,11 +4,15 @@ import random
 import time
 
 BACKGROUND_COLOR = "#B1DDC6"
-# ----------------------------Backend---------------------------- #
-df=pd.read_csv('./data/french_words.csv')
-language_data=df.to_dict(orient='records')
-language_data_copy=df.to_dict(orient='records')
 word={}
+# ----------------------------Backend---------------------------- #
+
+try:
+    data=pd.read_csv('./data/words_to_learn.csv')
+except FileNotFoundError:
+    data=pd.read_csv('./data/french_words.csv')
+finally:
+    language_data=data.to_dict(orient='records')    
 
 def next_card():
     global word, flip_timer
@@ -18,7 +22,6 @@ def next_card():
     canvas.itemconfig(text_text,text=word['French'], fill='black')
     canvas.itemconfig(language_text,text='French', fill='black')
     flip_timer=window.after(3000, func=flip_card)
-    language_data.remove(word)
 
 def flip_card():
     canvas.itemconfig(canvas_image, image=card_back)
@@ -27,7 +30,9 @@ def flip_card():
 
 def correct_guess():
     global word
-    language_data_copy.remove(word)
+    language_data.remove(word)
+    data=pd.DataFrame(language_data)
+    data.to_csv('./data/words_to_learn.csv')
     next_card()
 
 # ----------------------------UI---------------------------- #
